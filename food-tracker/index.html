@@ -27,52 +27,53 @@
     const mealIcons = { breakfast: '☕', lunch: '☀️', dinner: '🌙', snack: '🍎' };
     const mealNames = { breakfast: 'Сніданок', lunch: 'Обід', dinner: 'Вечеря', snack: 'Перекус' };
 
-    // База продуктів: satFat=насичені, wordsunFat=ненасичені, slowCarbs=повільні, fastCarbs=швидкі, wordsanimP=тваринний білок, wordsplantP=рослинний
+    // countable: true = можна рахувати штуками, avgWeight = середня вага однієї штуки
     const defaultFoods = [
-      { name: 'Куряча грудка', cal: 165, protein: 31, fat: 3.6, carbs: 0, animP: 31, plantP: 0, satFat: 1, wordsunFat: 2.6, slowCarbs: 0, fastCarbs: 0 },
-      { name: 'Куряче стегно', cal: 209, protein: 26, fat: 11, carbs: 0, animP: 26, plantP: 0, satFat: 3, wordsunFat: 8, slowCarbs: 0, fastCarbs: 0 },
-      { name: 'Яйце варене', cal: 155, protein: 13, fat: 11, carbs: 1.1, animP: 13, plantP: 0, satFat: 3.3, wordsunFat: 7.7, slowCarbs: 0, fastCarbs: 1.1 },
-      { name: 'Яйце смажене', cal: 196, protein: 14, fat: 15, carbs: 1, animP: 14, plantP: 0, satFat: 4, wordsunFat: 11, slowCarbs: 0, fastCarbs: 1 },
-      { name: 'Омлет', cal: 154, protein: 11, fat: 12, carbs: 0.7, animP: 11, plantP: 0, satFat: 3.5, wordsunFat: 8.5, slowCarbs: 0, fastCarbs: 0.7 },
-      { name: 'Рис білий', cal: 130, protein: 2.7, fat: 0.3, carbs: 28, animP: 0, plantP: 2.7, satFat: 0.1, wordsunFat: 0.2, slowCarbs: 25, fastCarbs: 3 },
-      { name: 'Рис бурий', cal: 111, protein: 2.6, fat: 0.9, carbs: 23, animP: 0, plantP: 2.6, satFat: 0.2, wordsunFat: 0.7, slowCarbs: 22, fastCarbs: 1 },
-      { name: 'Гречка', cal: 110, protein: 4.2, fat: 1.1, carbs: 21, animP: 0, plantP: 4.2, satFat: 0.2, wordsunFat: 0.9, slowCarbs: 20, fastCarbs: 1 },
-      { name: 'Овсянка', cal: 68, protein: 2.4, fat: 1.4, carbs: 12, animP: 0, plantP: 2.4, satFat: 0.2, wordsunFat: 1.2, slowCarbs: 11, fastCarbs: 1 },
-      { name: 'Банан', cal: 89, protein: 1.1, fat: 0.3, carbs: 23, animP: 0, plantP: 1.1, satFat: 0.1, wordsunFat: 0.2, slowCarbs: 5, fastCarbs: 18 },
-      { name: 'Яблуко', cal: 52, protein: 0.3, fat: 0.2, carbs: 14, animP: 0, plantP: 0.3, satFat: 0, wordsunFat: 0.2, slowCarbs: 4, fastCarbs: 10 },
-      { name: 'Апельсин', cal: 43, protein: 0.9, fat: 0.1, carbs: 9, animP: 0, plantP: 0.9, satFat: 0, wordsunFat: 0.1, slowCarbs: 2, fastCarbs: 7 },
-      { name: 'Авокадо', cal: 160, protein: 2, fat: 15, carbs: 9, animP: 0, plantP: 2, satFat: 2.1, wordsunFat: 12.9, slowCarbs: 7, fastCarbs: 2 },
-      { name: 'Сир твердий', cal: 402, protein: 25, fat: 33, carbs: 1.3, animP: 25, plantP: 0, satFat: 21, wordsunFat: 12, slowCarbs: 0, fastCarbs: 1.3 },
-      { name: 'Сир кисломолочний 5%', cal: 121, protein: 17, fat: 5, carbs: 1.8, animP: 17, plantP: 0, satFat: 3, wordsunFat: 2, slowCarbs: 0, fastCarbs: 1.8 },
-      { name: 'Сир кисломолочний 0%', cal: 71, protein: 18, fat: 0.1, carbs: 1.8, animP: 18, plantP: 0, satFat: 0, wordsunFat: 0.1, slowCarbs: 0, fastCarbs: 1.8 },
-      { name: 'Молоко 2.5%', cal: 52, protein: 2.8, fat: 2.5, carbs: 4.7, animP: 2.8, plantP: 0, satFat: 1.6, wordsunFat: 0.9, slowCarbs: 0, fastCarbs: 4.7 },
-      { name: 'Йогурт натуральний', cal: 59, protein: 10, fat: 0.7, carbs: 3.6, animP: 10, plantP: 0, satFat: 0.4, wordsunFat: 0.3, slowCarbs: 0, fastCarbs: 3.6 },
-      { name: 'Кефір 1%', cal: 40, protein: 3, fat: 1, carbs: 4, animP: 3, plantP: 0, satFat: 0.6, wordsunFat: 0.4, slowCarbs: 0, fastCarbs: 4 },
-      { name: 'Хліб білий', cal: 265, protein: 9, fat: 3.2, carbs: 49, animP: 0, plantP: 9, satFat: 0.7, wordsunFat: 2.5, slowCarbs: 20, fastCarbs: 29 },
-      { name: 'Хліб чорний', cal: 201, protein: 6.6, fat: 1.2, carbs: 40, animP: 0, plantP: 6.6, satFat: 0.3, wordsunFat: 0.9, slowCarbs: 35, fastCarbs: 5 },
-      { name: 'Макарони', cal: 131, protein: 5, fat: 1.1, carbs: 25, animP: 0, plantP: 5, satFat: 0.2, wordsunFat: 0.9, slowCarbs: 23, fastCarbs: 2 },
-      { name: 'Яловичина', cal: 250, protein: 26, fat: 15, carbs: 0, animP: 26, plantP: 0, satFat: 6, wordsunFat: 9, slowCarbs: 0, fastCarbs: 0 },
-      { name: 'Свинина', cal: 242, protein: 17, fat: 19, carbs: 0, animP: 17, plantP: 0, satFat: 7, wordsunFat: 12, slowCarbs: 0, fastCarbs: 0 },
-      { name: 'Індичка філе', cal: 104, protein: 24, fat: 1, carbs: 0, animP: 24, plantP: 0, satFat: 0.3, wordsunFat: 0.7, slowCarbs: 0, fastCarbs: 0 },
-      { name: 'Лосось', cal: 208, protein: 20, fat: 13, carbs: 0, animP: 20, plantP: 0, satFat: 3, wordsunFat: 10, slowCarbs: 0, fastCarbs: 0 },
-      { name: 'Тунець', cal: 132, protein: 29, fat: 1, carbs: 0, animP: 29, plantP: 0, satFat: 0.2, wordsunFat: 0.8, slowCarbs: 0, fastCarbs: 0 },
-      { name: 'Креветки', cal: 99, protein: 24, fat: 0.3, carbs: 0.2, animP: 24, plantP: 0, satFat: 0.1, wordsunFat: 0.2, slowCarbs: 0, fastCarbs: 0.2 },
-      { name: 'Картопля варена', cal: 82, protein: 2, fat: 0.1, carbs: 17, animP: 0, plantP: 2, satFat: 0, wordsunFat: 0.1, slowCarbs: 15, fastCarbs: 2 },
-      { name: 'Огірок', cal: 15, protein: 0.7, fat: 0.1, carbs: 3.6, animP: 0, plantP: 0.7, satFat: 0, wordsunFat: 0.1, slowCarbs: 2, fastCarbs: 1.6 },
-      { name: 'Помідор', cal: 18, protein: 0.9, fat: 0.2, carbs: 3.9, animP: 0, plantP: 0.9, satFat: 0, wordsunFat: 0.2, slowCarbs: 1, fastCarbs: 2.9 },
-      { name: 'Броколі', cal: 34, protein: 2.8, fat: 0.4, carbs: 7, animP: 0, plantP: 2.8, satFat: 0.1, wordsunFat: 0.3, slowCarbs: 5, fastCarbs: 2 },
-      { name: 'Гриби шампіньйони', cal: 22, protein: 3.1, fat: 0.3, carbs: 3.3, animP: 0, plantP: 3.1, satFat: 0, wordsunFat: 0.3, slowCarbs: 2, fastCarbs: 1.3 },
-      { name: 'Олія соняшникова', cal: 884, protein: 0, fat: 100, carbs: 0, animP: 0, plantP: 0, satFat: 10, wordsunFat: 90, slowCarbs: 0, fastCarbs: 0 },
-      { name: 'Олія оливкова', cal: 884, protein: 0, fat: 100, carbs: 0, animP: 0, plantP: 0, satFat: 14, wordsunFat: 86, slowCarbs: 0, fastCarbs: 0 },
-      { name: 'Вершкове масло', cal: 717, protein: 0.9, fat: 81, carbs: 0.1, animP: 0.9, plantP: 0, satFat: 51, wordsunFat: 30, slowCarbs: 0, fastCarbs: 0.1 },
-      { name: 'Мед', cal: 304, protein: 0.3, fat: 0, carbs: 82, animP: 0, plantP: 0.3, satFat: 0, wordsunFat: 0, slowCarbs: 5, fastCarbs: 77 },
-      { name: 'Шоколад чорний', cal: 546, protein: 5, fat: 31, carbs: 60, animP: 0, plantP: 5, satFat: 19, wordsunFat: 12, slowCarbs: 10, fastCarbs: 50 },
-      { name: 'Горіхи волоські', cal: 654, protein: 15, fat: 65, carbs: 14, animP: 0, plantP: 15, satFat: 6, wordsunFat: 59, slowCarbs: 7, fastCarbs: 7 },
-      { name: 'Мигдаль', cal: 579, protein: 21, fat: 50, carbs: 22, animP: 0, plantP: 21, satFat: 4, wordsunFat: 46, slowCarbs: 12, fastCarbs: 10 },
-      { name: 'Протеїн сироватковий', cal: 352, protein: 80, fat: 3, carbs: 8, animP: 80, plantP: 0, satFat: 1.5, wordsunFat: 1.5, slowCarbs: 2, fastCarbs: 6 },
-      { name: 'Квасоля', cal: 127, protein: 8.7, fat: 0.5, carbs: 22, animP: 0, plantP: 8.7, satFat: 0.1, wordsunFat: 0.4, slowCarbs: 20, fastCarbs: 2 },
-      { name: 'Сочевиця', cal: 116, protein: 9, fat: 0.4, carbs: 20, animP: 0, plantP: 9, satFat: 0.1, wordsunFat: 0.3, slowCarbs: 18, fastCarbs: 2 },
-      { name: 'Тофу', cal: 76, protein: 8, fat: 4.8, carbs: 1.9, animP: 0, plantP: 8, satFat: 0.7, wordsunFat: 4.1, slowCarbs: 1, fastCarbs: 0.9 },
+      { name: 'Куряча грудка', icon: '🍗', cal: 165, protein: 31, fat: 3.6, carbs: 0, animP: 31, plantP: 0, satFat: 1, wordsunFat: 2.6, slowCarbs: 0, fastCarbs: 0 },
+      { name: 'Куряче стегно', icon: '🍗', cal: 209, protein: 26, fat: 11, carbs: 0, animP: 26, plantP: 0, satFat: 3, wordsunFat: 8, slowCarbs: 0, fastCarbs: 0 },
+      { name: 'Яйце варене', icon: '🥚', cal: 155, protein: 13, fat: 11, carbs: 1.1, animP: 13, plantP: 0, satFat: 3.3, wordsunFat: 7.7, slowCarbs: 0, fastCarbs: 1.1, countable: true, avgWeight: 60 },
+      { name: 'Яйце смажене', icon: '🍳', cal: 196, protein: 14, fat: 15, carbs: 1, animP: 14, plantP: 0, satFat: 4, wordsunFat: 11, slowCarbs: 0, fastCarbs: 1, countable: true, avgWeight: 60 },
+      { name: 'Омлет', icon: '🍳', cal: 154, protein: 11, fat: 12, carbs: 0.7, animP: 11, plantP: 0, satFat: 3.5, wordsunFat: 8.5, slowCarbs: 0, fastCarbs: 0.7, countable: true, avgWeight: 120 },
+      { name: 'Рис білий', icon: '🍚', cal: 130, protein: 2.7, fat: 0.3, carbs: 28, animP: 0, plantP: 2.7, satFat: 0.1, wordsunFat: 0.2, slowCarbs: 25, fastCarbs: 3 },
+      { name: 'Рис бурий', icon: '🍚', cal: 111, protein: 2.6, fat: 0.9, carbs: 23, animP: 0, plantP: 2.6, satFat: 0.2, wordsunFat: 0.7, slowCarbs: 22, fastCarbs: 1 },
+      { name: 'Гречка', icon: '🫘', cal: 110, protein: 4.2, fat: 1.1, carbs: 21, animP: 0, plantP: 4.2, satFat: 0.2, wordsunFat: 0.9, slowCarbs: 20, fastCarbs: 1 },
+      { name: 'Овсянка', icon: '🥣', cal: 68, protein: 2.4, fat: 1.4, carbs: 12, animP: 0, plantP: 2.4, satFat: 0.2, wordsunFat: 1.2, slowCarbs: 11, fastCarbs: 1 },
+      { name: 'Банан', icon: '🍌', cal: 89, protein: 1.1, fat: 0.3, carbs: 23, animP: 0, plantP: 1.1, satFat: 0.1, wordsunFat: 0.2, slowCarbs: 5, fastCarbs: 18, countable: true, avgWeight: 120 },
+      { name: 'Яблуко', icon: '🍎', cal: 52, protein: 0.3, fat: 0.2, carbs: 14, animP: 0, plantP: 0.3, satFat: 0, wordsunFat: 0.2, slowCarbs: 4, fastCarbs: 10, countable: true, avgWeight: 180 },
+      { name: 'Апельсин', icon: '🍊', cal: 43, protein: 0.9, fat: 0.1, carbs: 9, animP: 0, plantP: 0.9, satFat: 0, wordsunFat: 0.1, slowCarbs: 2, fastCarbs: 7, countable: true, avgWeight: 150 },
+      { name: 'Авокадо', icon: '🥑', cal: 160, protein: 2, fat: 15, carbs: 9, animP: 0, plantP: 2, satFat: 2.1, wordsunFat: 12.9, slowCarbs: 7, fastCarbs: 2, countable: true, avgWeight: 150 },
+      { name: 'Сир твердий', icon: '🧀', cal: 402, protein: 25, fat: 33, carbs: 1.3, animP: 25, plantP: 0, satFat: 21, wordsunFat: 12, slowCarbs: 0, fastCarbs: 1.3 },
+      { name: 'Сир кисломолочний 5%', icon: '🥛', cal: 121, protein: 17, fat: 5, carbs: 1.8, animP: 17, plantP: 0, satFat: 3, wordsunFat: 2, slowCarbs: 0, fastCarbs: 1.8 },
+      { name: 'Сир кисломолочний 0%', icon: '🥛', cal: 71, protein: 18, fat: 0.1, carbs: 1.8, animP: 18, plantP: 0, satFat: 0, wordsunFat: 0.1, slowCarbs: 0, fastCarbs: 1.8 },
+      { name: 'Молоко 2.5%', icon: '🥛', cal: 52, protein: 2.8, fat: 2.5, carbs: 4.7, animP: 2.8, plantP: 0, satFat: 1.6, wordsunFat: 0.9, slowCarbs: 0, fastCarbs: 4.7 },
+      { name: 'Йогурт натуральний', icon: '🥛', cal: 59, protein: 10, fat: 0.7, carbs: 3.6, animP: 10, plantP: 0, satFat: 0.4, wordsunFat: 0.3, slowCarbs: 0, fastCarbs: 3.6, countable: true, avgWeight: 150 },
+      { name: 'Кефір 1%', icon: '🥛', cal: 40, protein: 3, fat: 1, carbs: 4, animP: 3, plantP: 0, satFat: 0.6, wordsunFat: 0.4, slowCarbs: 0, fastCarbs: 4 },
+      { name: 'Хліб білий', icon: '🍞', cal: 265, protein: 9, fat: 3.2, carbs: 49, animP: 0, plantP: 9, satFat: 0.7, wordsunFat: 2.5, slowCarbs: 20, fastCarbs: 29, countable: true, avgWeight: 30 },
+      { name: 'Хліб чорний', icon: '🍞', cal: 201, protein: 6.6, fat: 1.2, carbs: 40, animP: 0, plantP: 6.6, satFat: 0.3, wordsunFat: 0.9, slowCarbs: 35, fastCarbs: 5, countable: true, avgWeight: 30 },
+      { name: 'Макарони', icon: '🍝', cal: 131, protein: 5, fat: 1.1, carbs: 25, animP: 0, plantP: 5, satFat: 0.2, wordsunFat: 0.9, slowCarbs: 23, fastCarbs: 2 },
+      { name: 'Яловичина', icon: '🥩', cal: 250, protein: 26, fat: 15, carbs: 0, animP: 26, plantP: 0, satFat: 6, wordsunFat: 9, slowCarbs: 0, fastCarbs: 0 },
+      { name: 'Свинина', icon: '🥩', cal: 242, protein: 17, fat: 19, carbs: 0, animP: 17, plantP: 0, satFat: 7, wordsunFat: 12, slowCarbs: 0, fastCarbs: 0 },
+      { name: 'Індичка філе', icon: '🍗', cal: 104, protein: 24, fat: 1, carbs: 0, animP: 24, plantP: 0, satFat: 0.3, wordsunFat: 0.7, slowCarbs: 0, fastCarbs: 0 },
+      { name: 'Лосось', icon: '🐟', cal: 208, protein: 20, fat: 13, carbs: 0, animP: 20, plantP: 0, satFat: 3, wordsunFat: 10, slowCarbs: 0, fastCarbs: 0 },
+      { name: 'Тунець', icon: '🐟', cal: 132, protein: 29, fat: 1, carbs: 0, animP: 29, plantP: 0, satFat: 0.2, wordsunFat: 0.8, slowCarbs: 0, fastCarbs: 0 },
+      { name: 'Креветки', icon: '🦐', cal: 99, protein: 24, fat: 0.3, carbs: 0.2, animP: 24, plantP: 0, satFat: 0.1, wordsunFat: 0.2, slowCarbs: 0, fastCarbs: 0.2 },
+      { name: 'Картопля варена', icon: '🥔', cal: 82, protein: 2, fat: 0.1, carbs: 17, animP: 0, plantP: 2, satFat: 0, wordsunFat: 0.1, slowCarbs: 15, fastCarbs: 2 },
+      { name: 'Огірок', icon: '🥒', cal: 15, protein: 0.7, fat: 0.1, carbs: 3.6, animP: 0, plantP: 0.7, satFat: 0, wordsunFat: 0.1, slowCarbs: 2, fastCarbs: 1.6, countable: true, avgWeight: 100 },
+      { name: 'Помідор', icon: '🍅', cal: 18, protein: 0.9, fat: 0.2, carbs: 3.9, animP: 0, plantP: 0.9, satFat: 0, wordsunFat: 0.2, slowCarbs: 1, fastCarbs: 2.9, countable: true, avgWeight: 120 },
+      { name: 'Броколі', icon: '🥦', cal: 34, protein: 2.8, fat: 0.4, carbs: 7, animP: 0, plantP: 2.8, satFat: 0.1, wordsunFat: 0.3, slowCarbs: 5, fastCarbs: 2 },
+      { name: 'Гриби шампіньйони', icon: '🍄', cal: 22, protein: 3.1, fat: 0.3, carbs: 3.3, animP: 0, plantP: 3.1, satFat: 0, wordsunFat: 0.3, slowCarbs: 2, fastCarbs: 1.3 },
+      { name: 'Олія соняшникова', icon: '🫒', cal: 884, protein: 0, fat: 100, carbs: 0, animP: 0, plantP: 0, satFat: 10, wordsunFat: 90, slowCarbs: 0, fastCarbs: 0 },
+      { name: 'Олія оливкова', icon: '🫒', cal: 884, protein: 0, fat: 100, carbs: 0, animP: 0, plantP: 0, satFat: 14, wordsunFat: 86, slowCarbs: 0, fastCarbs: 0 },
+      { name: 'Вершкове масло', icon: '🧈', cal: 717, protein: 0.9, fat: 81, carbs: 0.1, animP: 0.9, plantP: 0, satFat: 51, wordsunFat: 30, slowCarbs: 0, fastCarbs: 0.1 },
+      { name: 'Мед', icon: '🍯', cal: 304, protein: 0.3, fat: 0, carbs: 82, animP: 0, plantP: 0.3, satFat: 0, wordsunFat: 0, slowCarbs: 5, fastCarbs: 77 },
+      { name: 'Шоколад чорний', icon: '🍫', cal: 546, protein: 5, fat: 31, carbs: 60, animP: 0, plantP: 5, satFat: 19, wordsunFat: 12, slowCarbs: 10, fastCarbs: 50 },
+      { name: 'Горіхи волоські', icon: '🥜', cal: 654, protein: 15, fat: 65, carbs: 14, animP: 0, plantP: 15, satFat: 6, wordsunFat: 59, slowCarbs: 7, fastCarbs: 7 },
+      { name: 'Мигдаль', icon: '🥜', cal: 579, protein: 21, fat: 50, carbs: 22, animP: 0, plantP: 21, satFat: 4, wordsunFat: 46, slowCarbs: 12, fastCarbs: 10 },
+      { name: 'Протеїн сироватковий', icon: '🥤', cal: 352, protein: 80, fat: 3, carbs: 8, animP: 80, plantP: 0, satFat: 1.5, wordsunFat: 1.5, slowCarbs: 2, fastCarbs: 6, countable: true, avgWeight: 30 },
+      { name: 'Квасоля', icon: '🫘', cal: 127, protein: 8.7, fat: 0.5, carbs: 22, animP: 0, plantP: 8.7, satFat: 0.1, wordsunFat: 0.4, slowCarbs: 20, fastCarbs: 2 },
+      { name: 'Сочевиця', icon: '🫘', cal: 116, protein: 9, fat: 0.4, carbs: 20, animP: 0, plantP: 9, satFat: 0.1, wordsunFat: 0.3, slowCarbs: 18, fastCarbs: 2 },
+      { name: 'Тофу', icon: '🧈', cal: 76, protein: 8, fat: 4.8, carbs: 1.9, animP: 0, plantP: 8, satFat: 0.7, wordsunFat: 4.1, slowCarbs: 1, fastCarbs: 0.9 },
+      { name: 'Кава', icon: '☕', cal: 2, protein: 0.1, fat: 0, carbs: 0.3, animP: 0, plantP: 0.1, satFat: 0, wordsunFat: 0, slowCarbs: 0, fastCarbs: 0.3, countable: true, avgWeight: 200 },
     ];
 
     const getDateStr = (d) => d.toISOString().split('T')[0];
@@ -110,6 +111,28 @@
       );
     };
 
+    const Chart = ({ data, color, label, unit, height = 120 }) => {
+      if (!data.length) return <p className="text-gray-500 text-center py-4 text-sm">Немає даних</p>;
+      const max = Math.max(...data.map(d => d.value)) || 1;
+      const min = Math.min(...data.map(d => d.value));
+      return (
+        <div>
+          <div className="flex justify-between text-xs text-gray-400 mb-1">
+            <span>{label}</span>
+            <span>max: {max.toFixed(0)}{unit}</span>
+          </div>
+          <div className="flex items-end gap-1" style={{ height }}>
+            {data.map((d, i) => (
+              <div key={i} className="flex-1 flex flex-col items-center">
+                <div className="w-full rounded-t" style={{ height: `${(d.value / max) * 100}%`, background: color, minHeight: d.value > 0 ? 4 : 0 }} />
+                <span className="text-xs text-gray-500 mt-1 truncate w-full text-center">{d.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    };
+
     const Alert = ({ type, message, onClose }) => (
       <div className={`alert ${type === 'warning' ? 'bg-yellow-600' : 'bg-red-600'} text-white`}>
         <div className="flex justify-between items-start">
@@ -128,18 +151,24 @@
       const [showSettings, setShowSettings] = useState(false);
       const [showAddFood, setShowAddFood] = useState(false);
       const [showDetails, setShowDetails] = useState(false);
+      const [showMealDetail, setShowMealDetail] = useState(null);
+      const [editMeal, setEditMeal] = useState(null);
       const [selectedFood, setSelectedFood] = useState('');
       const [grams, setGrams] = useState('100');
+      const [quantity, setQuantity] = useState('1');
+      const [inputMode, setInputMode] = useState('grams');
       const [mealType, setMealType] = useState('breakfast');
       const [weight, setWeight] = useState('');
       const [currentDate, setCurrentDate] = useState(new Date());
       const [goals, setGoals] = useState({ calories: 2400, protein: 160, fat: 80, carbs: 220 });
       const [tempGoals, setTempGoals] = useState(goals);
-      const [newFood, setNewFood] = useState({ name: '', cal: '', protein: '', fat: '', carbs: '', animP: '', plantP: '', satFat: '', wordsunFat: '', slowCarbs: '', fastCarbs: '' });
+      const [newFood, setNewFood] = useState({ name: '', cal: '', protein: '', fat: '', carbs: '', animP: '', plantP: '', satFat: '', wordsunFat: '', slowCarbs: '', fastCarbs: '', icon: '🍽️' });
       const [alerts, setAlerts] = useState([]);
+      const [chartPeriod, setChartPeriod] = useState('week');
 
       const today = getDateStr(currentDate);
       const allFoods = [...defaultFoods, ...customFoods].sort((a, b) => a.name.localeCompare(b.name, 'uk'));
+      const selectedFoodData = allFoods.find(f => f.name === selectedFood);
 
       useEffect(() => {
         setMeals(storage.get(`meals:${today}`) || []);
@@ -149,7 +178,6 @@
         if (g) { setGoals(g); setTempGoals(g); }
       }, [today]);
 
-      // Сповіщення при вході
       useEffect(() => {
         const hour = new Date().getHours();
         const todayMeals = storage.get(`meals:${getDateStr(new Date())}`) || [];
@@ -158,25 +186,43 @@
         const tC = todayMeals.reduce((s, m) => s + (m.carbs || 0), 0);
         const g = storage.get('goals') || goals;
         const newAlerts = [];
-        
-        if (hour >= 21 && tP < g.protein) {
-          newAlerts.push({ type: 'warning', message: `Вечір! Не добрав білка: ${tP.toFixed(0)}г з ${g.protein}г. Додай сир або яйця!` });
-        }
-        if (tF >= g.fat && tC >= g.carbs) {
-          newAlerts.push({ type: 'limit', message: `Ліміт по жирах (${tF.toFixed(0)}г) та вуглеводах (${tC.toFixed(0)}г) вичерпано!` });
-        }
+        if (hour >= 21 && tP < g.protein) newAlerts.push({ type: 'warning', message: `Вечір! Не добрав білка: ${tP.toFixed(0)}г з ${g.protein}г` });
+        if (tF >= g.fat && tC >= g.carbs) newAlerts.push({ type: 'limit', message: `Ліміт жирів і вуглеводів вичерпано!` });
         setAlerts(newAlerts);
       }, []);
 
+      useEffect(() => {
+        if (selectedFoodData?.countable) {
+          setInputMode('quantity');
+          setGrams(String(selectedFoodData.avgWeight));
+        } else {
+          setInputMode('grams');
+        }
+      }, [selectedFood]);
+
+      const getChartData = (type) => {
+        const periods = { day: 1, week: 7, month: 30, year: 365 };
+        const days = periods[chartPeriod];
+        const data = [];
+        for (let i = days - 1; i >= 0; i--) {
+          const d = new Date(); d.setDate(d.getDate() - i);
+          const ds = getDateStr(d);
+          if (type === 'weight') {
+            const w = weights.find(x => x.date === ds);
+            data.push({ label: chartPeriod === 'day' ? 'Сьогодні' : d.getDate(), value: w?.weight || 0 });
+          } else {
+            const m = storage.get(`meals:${ds}`) || [];
+            data.push({ label: chartPeriod === 'day' ? 'Сьогодні' : d.getDate(), value: m.reduce((s, x) => s + x.calories, 0) });
+          }
+        }
+        return data;
+      };
+
       const saveMeals = (m) => { setMeals(m); storage.set(`meals:${today}`, m); };
       
-      const addMeal = () => {
-        if (!selectedFood) return;
-        const food = allFoods.find(f => f.name === selectedFood);
-        if (!food) return;
-        const mult = (parseFloat(grams) || 100) / 100;
-        const m = {
-          id: Date.now(), name: food.name, grams: parseFloat(grams) || 100,
+      const calcMealData = (food, g) => {
+        const mult = g / 100;
+        return {
           calories: Math.round(food.cal * mult),
           protein: Math.round(food.protein * mult * 10) / 10,
           fat: Math.round(food.fat * mult * 10) / 10,
@@ -187,42 +233,47 @@
           wordsunFat: Math.round((food.wordsunFat || 0) * mult * 10) / 10,
           slowCarbs: Math.round((food.slowCarbs || 0) * mult * 10) / 10,
           fastCarbs: Math.round((food.fastCarbs || 0) * mult * 10) / 10,
-          type: mealType
         };
+      };
+
+      const addMeal = () => {
+        if (!selectedFood) return;
+        const food = allFoods.find(f => f.name === selectedFood);
+        if (!food) return;
+        const finalGrams = inputMode === 'quantity' ? (parseFloat(quantity) || 1) * (food.avgWeight || 100) : (parseFloat(grams) || 100);
+        const data = calcMealData(food, finalGrams);
+        const m = { id: Date.now(), name: food.name, icon: food.icon || '🍽️', grams: finalGrams, type: mealType, ...data };
         saveMeals([...meals, m]);
-        setSelectedFood(''); setGrams('100'); setShowForm(false);
+        setSelectedFood(''); setGrams('100'); setQuantity('1'); setShowForm(false);
+      };
+
+      const updateMeal = () => {
+        if (!editMeal) return;
+        const food = allFoods.find(f => f.name === editMeal.name);
+        const data = food ? calcMealData(food, editMeal.grams) : {};
+        const updated = meals.map(m => m.id === editMeal.id ? { ...editMeal, ...data } : m);
+        saveMeals(updated);
+        setEditMeal(null); setShowMealDetail(null);
       };
       
-      const deleteMeal = (id) => saveMeals(meals.filter(m => m.id !== id));
+      const deleteMeal = (id) => { saveMeals(meals.filter(m => m.id !== id)); setShowMealDetail(null); };
       const addWeight = () => { if (!weight) return; const w = [...weights.filter(x => x.date !== today), { date: today, weight: parseFloat(weight) }].sort((a, b) => a.date.localeCompare(b.date)); setWeights(w); storage.set('weights', w); setWeight(''); };
       const updateGoals = () => { setGoals(tempGoals); storage.set('goals', tempGoals); setShowSettings(false); };
       const changeDate = (d) => { const n = new Date(currentDate); n.setDate(n.getDate() + d); if (n <= new Date()) setCurrentDate(n); };
       
       const addCustomFood = () => {
         if (!newFood.name || !newFood.cal) return;
-        const f = {
-          name: newFood.name, cal: +newFood.cal || 0,
-          protein: +newFood.protein || 0, fat: +newFood.fat || 0, carbs: +newFood.carbs || 0,
-          animP: +newFood.animP || 0, plantP: +newFood.plantP || 0,
-          satFat: +newFood.satFat || 0, wordsunFat: +newFood.wordsunFat || 0,
-          slowCarbs: +newFood.slowCarbs || 0, fastCarbs: +newFood.fastCarbs || 0
-        };
-        const upd = [...customFoods, f];
-        setCustomFoods(upd); storage.set('customFoods', upd);
-        setNewFood({ name: '', cal: '', protein: '', fat: '', carbs: '', animP: '', plantP: '', satFat: '', wordsunFat: '', slowCarbs: '', fastCarbs: '' });
-        setShowAddFood(false);
+        const f = { name: newFood.name, icon: newFood.icon || '🍽️', cal: +newFood.cal || 0, protein: +newFood.protein || 0, fat: +newFood.fat || 0, carbs: +newFood.carbs || 0, animP: +newFood.animP || 0, plantP: +newFood.plantP || 0, satFat: +newFood.satFat || 0, wordsunFat: +newFood.wordsunFat || 0, slowCarbs: +newFood.slowCarbs || 0, fastCarbs: +newFood.fastCarbs || 0 };
+        const upd = [...customFoods, f]; setCustomFoods(upd); storage.set('customFoods', upd);
+        setNewFood({ name: '', cal: '', protein: '', fat: '', carbs: '', animP: '', plantP: '', satFat: '', wordsunFat: '', slowCarbs: '', fastCarbs: '', icon: '🍽️' }); setShowAddFood(false);
       };
 
-      const totalCal = meals.reduce((s, m) => s + m.calories, 0);
-      const totalP = meals.reduce((s, m) => s + m.protein, 0);
-      const totalF = meals.reduce((s, m) => s + m.fat, 0);
-      const totalC = meals.reduce((s, m) => s + m.carbs, 0);
-      const totalAnimP = meals.reduce((s, m) => s + (m.animP || 0), 0);
-      const totalPlantP = meals.reduce((s, m) => s + (m.plantP || 0), 0);
-      const totalSatFat = meals.reduce((s, m) => s + (m.satFat || 0), 0);
-      const totalUnsatFat = meals.reduce((s, m) => s + (m.wordsunFat || 0), 0);
-      const totalSlowCarbs = meals.reduce((s, m) => s + (m.slowCarbs || 0), 0);
-      const totalFastCarbs = meals.reduce((s, m) => s + (m.fastCarbs || 0), 0);
+      const totals = meals.reduce((acc, m) => ({
+        cal: acc.cal + m.calories, p: acc.p + m.protein, f: acc.f + m.fat, c: acc.c + m.carbs,
+        animP: acc.animP + (m.animP || 0), plantP: acc.plantP + (m.plantP || 0),
+        satFat: acc.satFat + (m.satFat || 0), wordsunFat: acc.wordsunFat + (m.wordsunFat || 0),
+        slowCarbs: acc.slowCarbs + (m.slowCarbs || 0), fastCarbs: acc.fastCarbs + (m.fastCarbs || 0)
+      }), { cal: 0, p: 0, f: 0, c: 0, animP: 0, plantP: 0, satFat: 0, wordsunFat: 0, slowCarbs: 0, fastCarbs: 0 });
 
       return (
         <div className="min-h-screen bg-black text-white pb-20">
@@ -238,28 +289,32 @@
               <button onClick={() => changeDate(1)} className="p-2 text-2xl" disabled={today === getDateStr(new Date())}>›</button>
             </div>
 
+            {/* Settings Modal */}
             {showSettings && (
               <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4">
                 <div className="bg-gray-900 rounded-2xl p-5 w-full max-w-sm border border-gray-700 max-h-[90vh] overflow-y-auto">
-                  <div className="flex justify-between mb-4"><h3 className="font-bold">Налаштування цілей</h3><button onClick={() => setShowSettings(false)}>✕</button></div>
+                  <div className="flex justify-between mb-4"><h3 className="font-bold">Цілі</h3><button onClick={() => setShowSettings(false)}>✕</button></div>
                   <div className="space-y-3">
-                    <div><label className="text-sm text-gray-400">Калорії</label><input type="number" value={tempGoals.calories} onChange={(e) => setTempGoals({ ...tempGoals, calories: +e.target.value })} className="w-full bg-gray-800 rounded-xl px-4 py-2 mt-1" /></div>
-                    <div><label className="text-sm" style={{color:'#00ffff'}}>Білки (г)</label><input type="number" value={tempGoals.protein} onChange={(e) => setTempGoals({ ...tempGoals, protein: +e.target.value })} className="w-full bg-gray-800 rounded-xl px-4 py-2 mt-1" /></div>
-                    <div><label className="text-sm" style={{color:'#adff2f'}}>Жири (г)</label><input type="number" value={tempGoals.fat} onChange={(e) => setTempGoals({ ...tempGoals, fat: +e.target.value })} className="w-full bg-gray-800 rounded-xl px-4 py-2 mt-1" /></div>
-                    <div><label className="text-sm" style={{color:'#ff2d55'}}>Вуглеводи (г)</label><input type="number" value={tempGoals.carbs} onChange={(e) => setTempGoals({ ...tempGoals, carbs: +e.target.value })} className="w-full bg-gray-800 rounded-xl px-4 py-2 mt-1" /></div>
+                    {[['calories', 'Калорії', 'orange'], ['protein', 'Білки', '#00ffff'], ['fat', 'Жири', '#adff2f'], ['carbs', 'Вуглеводи', '#ff2d55']].map(([k, l, c]) => (
+                      <div key={k}><label className="text-sm" style={{color: c}}>{l}</label><input type="number" value={tempGoals[k]} onChange={(e) => setTempGoals({ ...tempGoals, [k]: +e.target.value })} className="w-full bg-gray-800 rounded-xl px-4 py-2 mt-1" /></div>
+                    ))}
                   </div>
                   <button onClick={updateGoals} className="w-full bg-emerald-500 py-3 rounded-xl mt-4 font-semibold">Зберегти</button>
                 </div>
               </div>
             )}
 
+            {/* Add Custom Food Modal */}
             {showAddFood && (
               <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4">
                 <div className="bg-gray-900 rounded-2xl p-5 w-full max-w-sm border border-gray-700 max-h-[90vh] overflow-y-auto">
-                  <div className="flex justify-between mb-4"><h3 className="font-bold">Новий продукт (на 100г)</h3><button onClick={() => setShowAddFood(false)}>✕</button></div>
+                  <div className="flex justify-between mb-4"><h3 className="font-bold">Новий продукт</h3><button onClick={() => setShowAddFood(false)}>✕</button></div>
                   <div className="space-y-3">
-                    <input placeholder="Назва" value={newFood.name} onChange={(e) => setNewFood({...newFood, name: e.target.value})} className="w-full bg-gray-800 rounded-xl px-4 py-2" />
-                    <input type="number" placeholder="Ккал" value={newFood.cal} onChange={(e) => setNewFood({...newFood, cal: e.target.value})} className="w-full bg-gray-800 rounded-xl px-4 py-2" />
+                    <div className="flex gap-2">
+                      <input placeholder="Іконка" value={newFood.icon} onChange={(e) => setNewFood({...newFood, icon: e.target.value})} className="w-16 bg-gray-800 rounded-xl px-3 py-2 text-center text-2xl" />
+                      <input placeholder="Назва" value={newFood.name} onChange={(e) => setNewFood({...newFood, name: e.target.value})} className="flex-1 bg-gray-800 rounded-xl px-4 py-2" />
+                    </div>
+                    <input type="number" placeholder="Ккал/100г" value={newFood.cal} onChange={(e) => setNewFood({...newFood, cal: e.target.value})} className="w-full bg-gray-800 rounded-xl px-4 py-2" />
                     <p className="text-xs text-gray-500">Білок:</p>
                     <div className="grid grid-cols-2 gap-2">
                       <input type="number" placeholder="Тваринний" value={newFood.animP} onChange={(e) => setNewFood({...newFood, animP: e.target.value, protein: (+e.target.value || 0) + (+newFood.plantP || 0)})} className="bg-gray-800 rounded-xl px-3 py-2 text-sm" />
@@ -281,66 +336,115 @@
               </div>
             )}
 
+            {/* Meal Detail Modal */}
+            {showMealDetail && (
+              <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4">
+                <div className="bg-gray-900 rounded-2xl p-5 w-full max-w-sm border border-gray-700">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="font-bold text-lg flex items-center gap-2"><span className="text-2xl">{showMealDetail.icon}</span>{showMealDetail.name}</h3>
+                    <button onClick={() => { setShowMealDetail(null); setEditMeal(null); }}>✕</button>
+                  </div>
+                  {editMeal ? (
+                    <div className="space-y-3">
+                      <div><label className="text-sm text-gray-400">Грами</label><input type="number" value={editMeal.grams} onChange={(e) => setEditMeal({...editMeal, grams: +e.target.value})} className="w-full bg-gray-800 rounded-xl px-4 py-2 mt-1" /></div>
+                      <div className="flex gap-2">
+                        <button onClick={() => setEditMeal(null)} className="flex-1 bg-gray-800 py-2 rounded-xl">Скасувати</button>
+                        <button onClick={updateMeal} className="flex-1 bg-emerald-500 py-2 rounded-xl font-semibold">Зберегти</button>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="space-y-2 text-sm">
+                        <p className="text-gray-400">Вага: <span className="text-white">{showMealDetail.grams}г</span></p>
+                        <p className="text-gray-400">Калорії: <span className="text-white">{showMealDetail.calories} ккал</span></p>
+                        <hr className="border-gray-800 my-2" />
+                        <p style={{color:'#00ffff'}}>Білок: {showMealDetail.protein}г <span className="text-gray-500">(твар: {showMealDetail.animP || 0}г, росл: {showMealDetail.plantP || 0}г)</span></p>
+                        <p style={{color:'#adff2f'}}>Жири: {showMealDetail.fat}г <span className="text-gray-500">(насич: {showMealDetail.satFat || 0}г, ненасич: {showMealDetail.wordsunFat || 0}г)</span></p>
+                        <p style={{color:'#ff2d55'}}>Вуглев: {showMealDetail.carbs}г <span className="text-gray-500">(повільн: {showMealDetail.slowCarbs || 0}г, швидк: {showMealDetail.fastCarbs || 0}г)</span></p>
+                      </div>
+                      <div className="flex gap-2 mt-4">
+                        <button onClick={() => setEditMeal(showMealDetail)} className="flex-1 bg-gray-800 py-2 rounded-xl">✏️ Редагувати</button>
+                        <button onClick={() => deleteMeal(showMealDetail.id)} className="flex-1 bg-red-600 py-2 rounded-xl">🗑️ Видалити</button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Tabs */}
             <div className="flex gap-2 mb-4">
-              {['food', 'weight'].map(t => (
-                <button key={t} onClick={() => setTab(t)} className={`flex-1 py-2 rounded-xl text-sm ${tab === t ? 'bg-emerald-500' : 'bg-gray-800'}`}>
-                  {t === 'food' ? '🍴 Їжа' : '⚖️ Вага'}
-                </button>
+              {[['food', '🍴 Їжа'], ['weight', '⚖️ Вага'], ['charts', '📊 Графіки']].map(([t, l]) => (
+                <button key={t} onClick={() => setTab(t)} className={`flex-1 py-2 rounded-xl text-sm ${tab === t ? 'bg-emerald-500' : 'bg-gray-800'}`}>{l}</button>
               ))}
             </div>
 
+            {/* Food Tab */}
             {tab === 'food' && (
               <>
                 <div className="bg-gray-900 rounded-2xl p-4 mb-4 border border-gray-800">
                   <div className="flex items-center gap-4">
-                    <MacroRings protein={totalP} fat={totalF} carbs={totalC} goals={goals} />
+                    <MacroRings protein={totals.p} fat={totals.f} carbs={totals.c} goals={goals} />
                     <div className="flex-1 space-y-2">
                       <div>
-                        <div className="flex justify-between text-sm mb-1"><span>🔥 Ккал</span><span><b>{totalCal}</b>/{goals.calories}</span></div>
-                        <div className="h-2 bg-gray-800 rounded-full overflow-hidden"><div className="h-full bg-orange-500" style={{ width: `${Math.min(totalCal / goals.calories * 100, 100)}%` }} /></div>
+                        <div className="flex justify-between text-sm mb-1"><span>🔥 Ккал</span><span><b>{totals.cal}</b>/{goals.calories}</span></div>
+                        <div className="h-2 bg-gray-800 rounded-full overflow-hidden"><div className="h-full bg-orange-500" style={{ width: `${Math.min(totals.cal / goals.calories * 100, 100)}%` }} /></div>
                       </div>
-                      <div className="flex justify-between text-xs"><span style={{color:'#00ffff'}}>Б: {totalP.toFixed(0)}г</span><span className="text-gray-500">/{goals.protein}г</span></div>
-                      <div className="flex justify-between text-xs"><span style={{color:'#adff2f'}}>Ж: {totalF.toFixed(0)}г</span><span className="text-gray-500">/{goals.fat}г</span></div>
-                      <div className="flex justify-between text-xs"><span style={{color:'#ff2d55'}}>В: {totalC.toFixed(0)}г</span><span className="text-gray-500">/{goals.carbs}г</span></div>
+                      <div className="flex justify-between text-xs"><span style={{color:'#00ffff'}}>Б: {totals.p.toFixed(0)}г</span><span className="text-gray-500">/{goals.protein}г</span></div>
+                      <div className="flex justify-between text-xs"><span style={{color:'#adff2f'}}>Ж: {totals.f.toFixed(0)}г</span><span className="text-gray-500">/{goals.fat}г</span></div>
+                      <div className="flex justify-between text-xs"><span style={{color:'#ff2d55'}}>В: {totals.c.toFixed(0)}г</span><span className="text-gray-500">/{goals.carbs}г</span></div>
                     </div>
                   </div>
-                  
-                  <button onClick={() => setShowDetails(!showDetails)} className="w-full text-center text-gray-400 text-xs mt-3 py-1">
-                    {showDetails ? '▲ Сховати деталі' : '▼ Детальна розбивка'}
-                  </button>
-                  
+                  <button onClick={() => setShowDetails(!showDetails)} className="w-full text-center text-gray-400 text-xs mt-3 py-1">{showDetails ? '▲ Сховати' : '▼ Деталі'}</button>
                   {showDetails && (
-                    <div className="mt-3 pt-3 border-t border-gray-800 space-y-2 text-xs">
-                      <div className="flex justify-between"><span style={{color:'#00ffff'}}>Білок тваринний:</span><span>{totalAnimP.toFixed(1)}г</span></div>
-                      <div className="flex justify-between"><span style={{color:'#00ffff'}}>Білок рослинний:</span><span>{totalPlantP.toFixed(1)}г</span></div>
-                      <div className="flex justify-between"><span style={{color:'#adff2f'}}>Жири насичені:</span><span>{totalSatFat.toFixed(1)}г</span></div>
-                      <div className="flex justify-between"><span style={{color:'#adff2f'}}>Жири ненасичені:</span><span>{totalUnsatFat.toFixed(1)}г</span></div>
-                      <div className="flex justify-between"><span style={{color:'#ff2d55'}}>Вуглеводи повільні:</span><span>{totalSlowCarbs.toFixed(1)}г</span></div>
-                      <div className="flex justify-between"><span style={{color:'#ff2d55'}}>Вуглеводи швидкі:</span><span>{totalFastCarbs.toFixed(1)}г</span></div>
+                    <div className="mt-3 pt-3 border-t border-gray-800 grid grid-cols-2 gap-2 text-xs">
+                      <div><span className="text-gray-400">Б тварин:</span> {totals.animP.toFixed(1)}г</div>
+                      <div><span className="text-gray-400">Б рослин:</span> {totals.plantP.toFixed(1)}г</div>
+                      <div><span className="text-gray-400">Ж насич:</span> {totals.satFat.toFixed(1)}г</div>
+                      <div><span className="text-gray-400">Ж ненасич:</span> {totals.wordsunFat.toFixed(1)}г</div>
+                      <div><span className="text-gray-400">В повільн:</span> {totals.slowCarbs.toFixed(1)}г</div>
+                      <div><span className="text-gray-400">В швидк:</span> {totals.fastCarbs.toFixed(1)}г</div>
                     </div>
                   )}
                 </div>
 
                 {!showForm ? (
                   <div className="flex gap-2 mb-4">
-                    <button onClick={() => setShowAddFood(true)} className="flex-1 bg-gray-800 py-3 rounded-xl text-sm">➕ Свій продукт</button>
+                    <button onClick={() => setShowAddFood(true)} className="flex-1 bg-gray-800 py-3 rounded-xl text-sm">➕ Свій</button>
                     <button onClick={() => setShowForm(true)} className="flex-1 bg-emerald-500 py-3 rounded-xl">➕ Додати</button>
                   </div>
                 ) : (
                   <div className="bg-gray-900 rounded-2xl p-4 mb-4 border border-gray-800">
                     <select value={selectedFood} onChange={(e) => setSelectedFood(e.target.value)} className="w-full bg-gray-800 rounded-xl px-4 py-3 mb-3">
                       <option value="">Оберіть продукт...</option>
-                      {allFoods.map((f, i) => <option key={i} value={f.name}>{f.name} — {f.cal} ккал</option>)}
+                      {allFoods.map((f, i) => <option key={i} value={f.name}>{f.icon} {f.name} — {f.cal} ккал</option>)}
                     </select>
-                    {selectedFood && <p className="text-sm text-gray-400 mb-3">Б:{allFoods.find(f=>f.name===selectedFood)?.protein}г Ж:{allFoods.find(f=>f.name===selectedFood)?.fat}г В:{allFoods.find(f=>f.name===selectedFood)?.carbs}г</p>}
-                    <input type="number" value={grams} onChange={(e) => setGrams(e.target.value)} placeholder="Грамів" className="w-full bg-gray-800 rounded-xl px-4 py-2 mb-3" />
+                    {selectedFood && (
+                      <>
+                        <p className="text-sm text-gray-400 mb-3">Б:{selectedFoodData?.protein}г Ж:{selectedFoodData?.fat}г В:{selectedFoodData?.carbs}г</p>
+                        {selectedFoodData?.countable ? (
+                          <div className="flex gap-2 mb-3">
+                            <button onClick={() => setInputMode('quantity')} className={`flex-1 py-2 rounded-xl text-sm ${inputMode === 'quantity' ? 'bg-emerald-500' : 'bg-gray-800'}`}>Кількість</button>
+                            <button onClick={() => setInputMode('grams')} className={`flex-1 py-2 rounded-xl text-sm ${inputMode === 'grams' ? 'bg-emerald-500' : 'bg-gray-800'}`}>Грами</button>
+                          </div>
+                        ) : null}
+                        {inputMode === 'quantity' && selectedFoodData?.countable ? (
+                          <div className="mb-3">
+                            <label className="text-xs text-gray-400">Кількість (1 шт ≈ {selectedFoodData.avgWeight}г)</label>
+                            <input type="number" value={quantity} onChange={(e) => setQuantity(e.target.value)} className="w-full bg-gray-800 rounded-xl px-4 py-2 mt-1" />
+                          </div>
+                        ) : (
+                          <input type="number" value={grams} onChange={(e) => setGrams(e.target.value)} placeholder="Грамів" className="w-full bg-gray-800 rounded-xl px-4 py-2 mb-3" />
+                        )}
+                      </>
+                    )}
                     <div className="grid grid-cols-4 gap-2 mb-3">
                       {Object.entries(mealNames).map(([k, v]) => (
                         <button key={k} onClick={() => setMealType(k)} className={`p-2 rounded-xl text-xs ${mealType === k ? 'bg-emerald-500' : 'bg-gray-800'}`}>{mealIcons[k]} {v}</button>
                       ))}
                     </div>
                     <div className="flex gap-2">
-                      <button onClick={() => setShowForm(false)} className="flex-1 bg-gray-800 py-2 rounded-xl">Скасувати</button>
+                      <button onClick={() => { setShowForm(false); setSelectedFood(''); }} className="flex-1 bg-gray-800 py-2 rounded-xl">Скасувати</button>
                       <button onClick={addMeal} className="flex-1 bg-emerald-500 py-2 rounded-xl font-semibold">Додати</button>
                     </div>
                   </div>
@@ -348,20 +452,20 @@
 
                 <div className="space-y-2">
                   {meals.map(m => (
-                    <div key={m.id} className="bg-gray-900 rounded-xl p-3 flex items-center gap-3 border border-gray-800">
-                      <span className="text-2xl">{mealIcons[m.type]}</span>
+                    <div key={m.id} onClick={() => setShowMealDetail(m)} className="bg-gray-900 rounded-xl p-3 flex items-center gap-3 border border-gray-800 cursor-pointer active:bg-gray-800">
+                      <span className="text-2xl">{m.icon || mealIcons[m.type]}</span>
                       <div className="flex-1">
                         <p className="font-medium text-sm">{m.name} ({m.grams}г)</p>
                         <p className="text-xs text-gray-400">Б:{m.protein}г Ж:{m.fat}г В:{m.carbs}г</p>
                       </div>
                       <div className="text-right"><p className="font-bold text-emerald-400">{m.calories}</p><p className="text-xs text-gray-400">ккал</p></div>
-                      <button onClick={() => deleteMeal(m.id)} className="text-red-400 p-1">🗑️</button>
                     </div>
                   ))}
                 </div>
               </>
             )}
 
+            {/* Weight Tab */}
             {tab === 'weight' && (
               <div className="space-y-4">
                 <div className="bg-gray-900 rounded-2xl p-4 border border-gray-800">
@@ -374,13 +478,32 @@
                 <div className="bg-gray-900 rounded-2xl p-4 border border-gray-800">
                   <h3 className="font-semibold mb-3">Історія</h3>
                   {weights.length === 0 ? <p className="text-gray-500 text-center py-4">Немає записів</p> : (
-                    <div className="space-y-2">{[...weights].reverse().map((w, i) => (
+                    <div className="space-y-2 max-h-64 overflow-y-auto">{[...weights].reverse().map((w, i) => (
                       <div key={i} className="flex justify-between bg-gray-800 rounded-lg p-3">
                         <span className="text-gray-400">{new Date(w.date).toLocaleDateString('uk-UA')}</span>
                         <span className="font-bold">{w.weight} кг</span>
                       </div>
                     ))}</div>
                   )}
+                </div>
+              </div>
+            )}
+
+            {/* Charts Tab */}
+            {tab === 'charts' && (
+              <div className="space-y-4">
+                <div className="flex gap-2">
+                  {['day', 'week', 'month', 'year'].map(p => (
+                    <button key={p} onClick={() => setChartPeriod(p)} className={`flex-1 py-2 rounded-xl text-xs ${chartPeriod === p ? 'bg-emerald-500' : 'bg-gray-800'}`}>
+                      {p === 'day' ? 'День' : p === 'week' ? 'Тиждень' : p === 'month' ? 'Місяць' : 'Рік'}
+                    </button>
+                  ))}
+                </div>
+                <div className="bg-gray-900 rounded-2xl p-4 border border-gray-800">
+                  <Chart data={getChartData('calories')} color="#f97316" label="🔥 Калорії" unit=" ккал" />
+                </div>
+                <div className="bg-gray-900 rounded-2xl p-4 border border-gray-800">
+                  <Chart data={getChartData('weight').filter(d => d.value > 0)} color="#10b981" label="⚖️ Вага" unit=" кг" />
                 </div>
               </div>
             )}
