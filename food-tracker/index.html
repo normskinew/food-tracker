@@ -8,7 +8,6 @@
   <meta name="theme-color" content="#000000">
   <title>Food Tracker</title>
   <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%2310b981' width='100' height='100' rx='20'/><text x='50' y='65' text-anchor='middle' font-size='50'>🍎</text></svg>">
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -16,6 +15,8 @@
   <style>
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     body { margin: 0; background: #000; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+    .alert { position: fixed; top: 20px; left: 20px; right: 20px; z-index: 100; padding: 16px; border-radius: 16px; animation: slideDown 0.3s ease; }
+    @keyframes slideDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
   </style>
 </head>
 <body>
@@ -26,51 +27,52 @@
     const mealIcons = { breakfast: '☕', lunch: '☀️', dinner: '🌙', snack: '🍎' };
     const mealNames = { breakfast: 'Сніданок', lunch: 'Обід', dinner: 'Вечеря', snack: 'Перекус' };
 
+    // База продуктів: satFat=насичені, wordsunFat=ненасичені, slowCarbs=повільні, fastCarbs=швидкі, wordsanimP=тваринний білок, wordsplantP=рослинний
     const defaultFoods = [
-      { name: 'Куряча грудка', cal: 165, protein: 31, fat: 3.6, carbs: 0 },
-      { name: 'Куряче стегно', cal: 209, protein: 26, fat: 11, carbs: 0 },
-      { name: 'Яйце варене', cal: 155, protein: 13, fat: 11, carbs: 1.1 },
-      { name: 'Яйце смажене', cal: 196, protein: 14, fat: 15, carbs: 1 },
-      { name: 'Омлет', cal: 154, protein: 11, fat: 12, carbs: 0.7 },
-      { name: 'Рис білий', cal: 130, protein: 2.7, fat: 0.3, carbs: 28 },
-      { name: 'Рис бурий', cal: 111, protein: 2.6, fat: 0.9, carbs: 23 },
-      { name: 'Гречка', cal: 110, protein: 4.2, fat: 1.1, carbs: 21 },
-      { name: 'Овсянка', cal: 68, protein: 2.4, fat: 1.4, carbs: 12 },
-      { name: 'Пшоняна каша', cal: 90, protein: 3, fat: 1, carbs: 17 },
-      { name: 'Банан', cal: 89, protein: 1.1, fat: 0.3, carbs: 23 },
-      { name: 'Яблуко', cal: 52, protein: 0.3, fat: 0.2, carbs: 14 },
-      { name: 'Апельсин', cal: 43, protein: 0.9, fat: 0.1, carbs: 9 },
-      { name: 'Виноград', cal: 69, protein: 0.7, fat: 0.2, carbs: 18 },
-      { name: 'Полуниця', cal: 32, protein: 0.7, fat: 0.3, carbs: 8 },
-      { name: 'Авокадо', cal: 160, protein: 2, fat: 15, carbs: 9 },
-      { name: 'Сир твердий', cal: 402, protein: 25, fat: 33, carbs: 1.3 },
-      { name: 'Сир кисломолочний 5%', cal: 121, protein: 17, fat: 5, carbs: 1.8 },
-      { name: 'Сир кисломолочний 0%', cal: 71, protein: 18, fat: 0.1, carbs: 1.8 },
-      { name: 'Молоко 2.5%', cal: 52, protein: 2.8, fat: 2.5, carbs: 4.7 },
-      { name: 'Йогурт натуральний', cal: 59, protein: 10, fat: 0.7, carbs: 3.6 },
-      { name: 'Кефір 1%', cal: 40, protein: 3, fat: 1, carbs: 4 },
-      { name: 'Хліб білий', cal: 265, protein: 9, fat: 3.2, carbs: 49 },
-      { name: 'Хліб чорний', cal: 201, protein: 6.6, fat: 1.2, carbs: 40 },
-      { name: 'Макарони', cal: 131, protein: 5, fat: 1.1, carbs: 25 },
-      { name: 'Яловичина', cal: 250, protein: 26, fat: 15, carbs: 0 },
-      { name: 'Свинина', cal: 242, protein: 17, fat: 19, carbs: 0 },
-      { name: 'Індичка філе', cal: 104, protein: 24, fat: 1, carbs: 0 },
-      { name: 'Лосось', cal: 208, protein: 20, fat: 13, carbs: 0 },
-      { name: 'Тунець', cal: 132, protein: 29, fat: 1, carbs: 0 },
-      { name: 'Креветки', cal: 99, protein: 24, fat: 0.3, carbs: 0.2 },
-      { name: 'Картопля варена', cal: 82, protein: 2, fat: 0.1, carbs: 17 },
-      { name: 'Огірок', cal: 15, protein: 0.7, fat: 0.1, carbs: 3.6 },
-      { name: 'Помідор', cal: 18, protein: 0.9, fat: 0.2, carbs: 3.9 },
-      { name: 'Броколі', cal: 34, protein: 2.8, fat: 0.4, carbs: 7 },
-      { name: 'Морква', cal: 41, protein: 0.9, fat: 0.2, carbs: 10 },
-      { name: 'Гриби шампіньйони', cal: 22, protein: 3.1, fat: 0.3, carbs: 3.3 },
-      { name: 'Олія соняшникова', cal: 884, protein: 0, fat: 100, carbs: 0 },
-      { name: 'Вершкове масло', cal: 717, protein: 0.9, fat: 81, carbs: 0.1 },
-      { name: 'Мед', cal: 304, protein: 0.3, fat: 0, carbs: 82 },
-      { name: 'Шоколад чорний', cal: 546, protein: 5, fat: 31, carbs: 60 },
-      { name: 'Горіхи волоські', cal: 654, protein: 15, fat: 65, carbs: 14 },
-      { name: 'Мигдаль', cal: 579, protein: 21, fat: 50, carbs: 22 },
-      { name: 'Протеїн сироватковий', cal: 352, protein: 80, fat: 3, carbs: 8 },
+      { name: 'Куряча грудка', cal: 165, protein: 31, fat: 3.6, carbs: 0, animP: 31, plantP: 0, satFat: 1, wordsunFat: 2.6, slowCarbs: 0, fastCarbs: 0 },
+      { name: 'Куряче стегно', cal: 209, protein: 26, fat: 11, carbs: 0, animP: 26, plantP: 0, satFat: 3, wordsunFat: 8, slowCarbs: 0, fastCarbs: 0 },
+      { name: 'Яйце варене', cal: 155, protein: 13, fat: 11, carbs: 1.1, animP: 13, plantP: 0, satFat: 3.3, wordsunFat: 7.7, slowCarbs: 0, fastCarbs: 1.1 },
+      { name: 'Яйце смажене', cal: 196, protein: 14, fat: 15, carbs: 1, animP: 14, plantP: 0, satFat: 4, wordsunFat: 11, slowCarbs: 0, fastCarbs: 1 },
+      { name: 'Омлет', cal: 154, protein: 11, fat: 12, carbs: 0.7, animP: 11, plantP: 0, satFat: 3.5, wordsunFat: 8.5, slowCarbs: 0, fastCarbs: 0.7 },
+      { name: 'Рис білий', cal: 130, protein: 2.7, fat: 0.3, carbs: 28, animP: 0, plantP: 2.7, satFat: 0.1, wordsunFat: 0.2, slowCarbs: 25, fastCarbs: 3 },
+      { name: 'Рис бурий', cal: 111, protein: 2.6, fat: 0.9, carbs: 23, animP: 0, plantP: 2.6, satFat: 0.2, wordsunFat: 0.7, slowCarbs: 22, fastCarbs: 1 },
+      { name: 'Гречка', cal: 110, protein: 4.2, fat: 1.1, carbs: 21, animP: 0, plantP: 4.2, satFat: 0.2, wordsunFat: 0.9, slowCarbs: 20, fastCarbs: 1 },
+      { name: 'Овсянка', cal: 68, protein: 2.4, fat: 1.4, carbs: 12, animP: 0, plantP: 2.4, satFat: 0.2, wordsunFat: 1.2, slowCarbs: 11, fastCarbs: 1 },
+      { name: 'Банан', cal: 89, protein: 1.1, fat: 0.3, carbs: 23, animP: 0, plantP: 1.1, satFat: 0.1, wordsunFat: 0.2, slowCarbs: 5, fastCarbs: 18 },
+      { name: 'Яблуко', cal: 52, protein: 0.3, fat: 0.2, carbs: 14, animP: 0, plantP: 0.3, satFat: 0, wordsunFat: 0.2, slowCarbs: 4, fastCarbs: 10 },
+      { name: 'Апельсин', cal: 43, protein: 0.9, fat: 0.1, carbs: 9, animP: 0, plantP: 0.9, satFat: 0, wordsunFat: 0.1, slowCarbs: 2, fastCarbs: 7 },
+      { name: 'Авокадо', cal: 160, protein: 2, fat: 15, carbs: 9, animP: 0, plantP: 2, satFat: 2.1, wordsunFat: 12.9, slowCarbs: 7, fastCarbs: 2 },
+      { name: 'Сир твердий', cal: 402, protein: 25, fat: 33, carbs: 1.3, animP: 25, plantP: 0, satFat: 21, wordsunFat: 12, slowCarbs: 0, fastCarbs: 1.3 },
+      { name: 'Сир кисломолочний 5%', cal: 121, protein: 17, fat: 5, carbs: 1.8, animP: 17, plantP: 0, satFat: 3, wordsunFat: 2, slowCarbs: 0, fastCarbs: 1.8 },
+      { name: 'Сир кисломолочний 0%', cal: 71, protein: 18, fat: 0.1, carbs: 1.8, animP: 18, plantP: 0, satFat: 0, wordsunFat: 0.1, slowCarbs: 0, fastCarbs: 1.8 },
+      { name: 'Молоко 2.5%', cal: 52, protein: 2.8, fat: 2.5, carbs: 4.7, animP: 2.8, plantP: 0, satFat: 1.6, wordsunFat: 0.9, slowCarbs: 0, fastCarbs: 4.7 },
+      { name: 'Йогурт натуральний', cal: 59, protein: 10, fat: 0.7, carbs: 3.6, animP: 10, plantP: 0, satFat: 0.4, wordsunFat: 0.3, slowCarbs: 0, fastCarbs: 3.6 },
+      { name: 'Кефір 1%', cal: 40, protein: 3, fat: 1, carbs: 4, animP: 3, plantP: 0, satFat: 0.6, wordsunFat: 0.4, slowCarbs: 0, fastCarbs: 4 },
+      { name: 'Хліб білий', cal: 265, protein: 9, fat: 3.2, carbs: 49, animP: 0, plantP: 9, satFat: 0.7, wordsunFat: 2.5, slowCarbs: 20, fastCarbs: 29 },
+      { name: 'Хліб чорний', cal: 201, protein: 6.6, fat: 1.2, carbs: 40, animP: 0, plantP: 6.6, satFat: 0.3, wordsunFat: 0.9, slowCarbs: 35, fastCarbs: 5 },
+      { name: 'Макарони', cal: 131, protein: 5, fat: 1.1, carbs: 25, animP: 0, plantP: 5, satFat: 0.2, wordsunFat: 0.9, slowCarbs: 23, fastCarbs: 2 },
+      { name: 'Яловичина', cal: 250, protein: 26, fat: 15, carbs: 0, animP: 26, plantP: 0, satFat: 6, wordsunFat: 9, slowCarbs: 0, fastCarbs: 0 },
+      { name: 'Свинина', cal: 242, protein: 17, fat: 19, carbs: 0, animP: 17, plantP: 0, satFat: 7, wordsunFat: 12, slowCarbs: 0, fastCarbs: 0 },
+      { name: 'Індичка філе', cal: 104, protein: 24, fat: 1, carbs: 0, animP: 24, plantP: 0, satFat: 0.3, wordsunFat: 0.7, slowCarbs: 0, fastCarbs: 0 },
+      { name: 'Лосось', cal: 208, protein: 20, fat: 13, carbs: 0, animP: 20, plantP: 0, satFat: 3, wordsunFat: 10, slowCarbs: 0, fastCarbs: 0 },
+      { name: 'Тунець', cal: 132, protein: 29, fat: 1, carbs: 0, animP: 29, plantP: 0, satFat: 0.2, wordsunFat: 0.8, slowCarbs: 0, fastCarbs: 0 },
+      { name: 'Креветки', cal: 99, protein: 24, fat: 0.3, carbs: 0.2, animP: 24, plantP: 0, satFat: 0.1, wordsunFat: 0.2, slowCarbs: 0, fastCarbs: 0.2 },
+      { name: 'Картопля варена', cal: 82, protein: 2, fat: 0.1, carbs: 17, animP: 0, plantP: 2, satFat: 0, wordsunFat: 0.1, slowCarbs: 15, fastCarbs: 2 },
+      { name: 'Огірок', cal: 15, protein: 0.7, fat: 0.1, carbs: 3.6, animP: 0, plantP: 0.7, satFat: 0, wordsunFat: 0.1, slowCarbs: 2, fastCarbs: 1.6 },
+      { name: 'Помідор', cal: 18, protein: 0.9, fat: 0.2, carbs: 3.9, animP: 0, plantP: 0.9, satFat: 0, wordsunFat: 0.2, slowCarbs: 1, fastCarbs: 2.9 },
+      { name: 'Броколі', cal: 34, protein: 2.8, fat: 0.4, carbs: 7, animP: 0, plantP: 2.8, satFat: 0.1, wordsunFat: 0.3, slowCarbs: 5, fastCarbs: 2 },
+      { name: 'Гриби шампіньйони', cal: 22, protein: 3.1, fat: 0.3, carbs: 3.3, animP: 0, plantP: 3.1, satFat: 0, wordsunFat: 0.3, slowCarbs: 2, fastCarbs: 1.3 },
+      { name: 'Олія соняшникова', cal: 884, protein: 0, fat: 100, carbs: 0, animP: 0, plantP: 0, satFat: 10, wordsunFat: 90, slowCarbs: 0, fastCarbs: 0 },
+      { name: 'Олія оливкова', cal: 884, protein: 0, fat: 100, carbs: 0, animP: 0, plantP: 0, satFat: 14, wordsunFat: 86, slowCarbs: 0, fastCarbs: 0 },
+      { name: 'Вершкове масло', cal: 717, protein: 0.9, fat: 81, carbs: 0.1, animP: 0.9, plantP: 0, satFat: 51, wordsunFat: 30, slowCarbs: 0, fastCarbs: 0.1 },
+      { name: 'Мед', cal: 304, protein: 0.3, fat: 0, carbs: 82, animP: 0, plantP: 0.3, satFat: 0, wordsunFat: 0, slowCarbs: 5, fastCarbs: 77 },
+      { name: 'Шоколад чорний', cal: 546, protein: 5, fat: 31, carbs: 60, animP: 0, plantP: 5, satFat: 19, wordsunFat: 12, slowCarbs: 10, fastCarbs: 50 },
+      { name: 'Горіхи волоські', cal: 654, protein: 15, fat: 65, carbs: 14, animP: 0, plantP: 15, satFat: 6, wordsunFat: 59, slowCarbs: 7, fastCarbs: 7 },
+      { name: 'Мигдаль', cal: 579, protein: 21, fat: 50, carbs: 22, animP: 0, plantP: 21, satFat: 4, wordsunFat: 46, slowCarbs: 12, fastCarbs: 10 },
+      { name: 'Протеїн сироватковий', cal: 352, protein: 80, fat: 3, carbs: 8, animP: 80, plantP: 0, satFat: 1.5, wordsunFat: 1.5, slowCarbs: 2, fastCarbs: 6 },
+      { name: 'Квасоля', cal: 127, protein: 8.7, fat: 0.5, carbs: 22, animP: 0, plantP: 8.7, satFat: 0.1, wordsunFat: 0.4, slowCarbs: 20, fastCarbs: 2 },
+      { name: 'Сочевиця', cal: 116, protein: 9, fat: 0.4, carbs: 20, animP: 0, plantP: 9, satFat: 0.1, wordsunFat: 0.3, slowCarbs: 18, fastCarbs: 2 },
+      { name: 'Тофу', cal: 76, protein: 8, fat: 4.8, carbs: 1.9, animP: 0, plantP: 8, satFat: 0.7, wordsunFat: 4.1, slowCarbs: 1, fastCarbs: 0.9 },
     ];
 
     const getDateStr = (d) => d.toISOString().split('T')[0];
@@ -108,6 +110,15 @@
       );
     };
 
+    const Alert = ({ type, message, onClose }) => (
+      <div className={`alert ${type === 'warning' ? 'bg-yellow-600' : 'bg-red-600'} text-white`}>
+        <div className="flex justify-between items-start">
+          <div><span className="text-xl mr-2">{type === 'warning' ? '⚠️' : '🛑'}</span>{message}</div>
+          <button onClick={onClose} className="text-xl ml-2">×</button>
+        </div>
+      </div>
+    );
+
     function App() {
       const [tab, setTab] = useState('food');
       const [meals, setMeals] = useState([]);
@@ -116,14 +127,16 @@
       const [showForm, setShowForm] = useState(false);
       const [showSettings, setShowSettings] = useState(false);
       const [showAddFood, setShowAddFood] = useState(false);
+      const [showDetails, setShowDetails] = useState(false);
       const [selectedFood, setSelectedFood] = useState('');
       const [grams, setGrams] = useState('100');
       const [mealType, setMealType] = useState('breakfast');
       const [weight, setWeight] = useState('');
       const [currentDate, setCurrentDate] = useState(new Date());
-      const [goals, setGoals] = useState({ calories: 2000, protein: 150, fat: 65, carbs: 250 });
+      const [goals, setGoals] = useState({ calories: 2400, protein: 160, fat: 80, carbs: 220 });
       const [tempGoals, setTempGoals] = useState(goals);
-      const [newFood, setNewFood] = useState({ name: '', cal: '', protein: '', fat: '', carbs: '' });
+      const [newFood, setNewFood] = useState({ name: '', cal: '', protein: '', fat: '', carbs: '', animP: '', plantP: '', satFat: '', wordsunFat: '', slowCarbs: '', fastCarbs: '' });
+      const [alerts, setAlerts] = useState([]);
 
       const today = getDateStr(currentDate);
       const allFoods = [...defaultFoods, ...customFoods].sort((a, b) => a.name.localeCompare(b.name, 'uk'));
@@ -136,29 +149,85 @@
         if (g) { setGoals(g); setTempGoals(g); }
       }, [today]);
 
+      // Сповіщення при вході
+      useEffect(() => {
+        const hour = new Date().getHours();
+        const todayMeals = storage.get(`meals:${getDateStr(new Date())}`) || [];
+        const tP = todayMeals.reduce((s, m) => s + (m.protein || 0), 0);
+        const tF = todayMeals.reduce((s, m) => s + (m.fat || 0), 0);
+        const tC = todayMeals.reduce((s, m) => s + (m.carbs || 0), 0);
+        const g = storage.get('goals') || goals;
+        const newAlerts = [];
+        
+        if (hour >= 21 && tP < g.protein) {
+          newAlerts.push({ type: 'warning', message: `Вечір! Не добрав білка: ${tP.toFixed(0)}г з ${g.protein}г. Додай сир або яйця!` });
+        }
+        if (tF >= g.fat && tC >= g.carbs) {
+          newAlerts.push({ type: 'limit', message: `Ліміт по жирах (${tF.toFixed(0)}г) та вуглеводах (${tC.toFixed(0)}г) вичерпано!` });
+        }
+        setAlerts(newAlerts);
+      }, []);
+
       const saveMeals = (m) => { setMeals(m); storage.set(`meals:${today}`, m); };
+      
       const addMeal = () => {
         if (!selectedFood) return;
         const food = allFoods.find(f => f.name === selectedFood);
         if (!food) return;
         const mult = (parseFloat(grams) || 100) / 100;
-        const m = { id: Date.now(), name: food.name, grams: parseFloat(grams) || 100, calories: Math.round(food.cal * mult), protein: Math.round(food.protein * mult * 10) / 10, fat: Math.round(food.fat * mult * 10) / 10, carbs: Math.round(food.carbs * mult * 10) / 10, type: mealType };
+        const m = {
+          id: Date.now(), name: food.name, grams: parseFloat(grams) || 100,
+          calories: Math.round(food.cal * mult),
+          protein: Math.round(food.protein * mult * 10) / 10,
+          fat: Math.round(food.fat * mult * 10) / 10,
+          carbs: Math.round(food.carbs * mult * 10) / 10,
+          animP: Math.round((food.animP || 0) * mult * 10) / 10,
+          plantP: Math.round((food.plantP || 0) * mult * 10) / 10,
+          satFat: Math.round((food.satFat || 0) * mult * 10) / 10,
+          wordsunFat: Math.round((food.wordsunFat || 0) * mult * 10) / 10,
+          slowCarbs: Math.round((food.slowCarbs || 0) * mult * 10) / 10,
+          fastCarbs: Math.round((food.fastCarbs || 0) * mult * 10) / 10,
+          type: mealType
+        };
         saveMeals([...meals, m]);
         setSelectedFood(''); setGrams('100'); setShowForm(false);
       };
+      
       const deleteMeal = (id) => saveMeals(meals.filter(m => m.id !== id));
       const addWeight = () => { if (!weight) return; const w = [...weights.filter(x => x.date !== today), { date: today, weight: parseFloat(weight) }].sort((a, b) => a.date.localeCompare(b.date)); setWeights(w); storage.set('weights', w); setWeight(''); };
       const updateGoals = () => { setGoals(tempGoals); storage.set('goals', tempGoals); setShowSettings(false); };
       const changeDate = (d) => { const n = new Date(currentDate); n.setDate(n.getDate() + d); if (n <= new Date()) setCurrentDate(n); };
-      const addCustomFood = () => { if (!newFood.name || !newFood.cal) return; const f = [...customFoods, { name: newFood.name, cal: +newFood.cal || 0, protein: +newFood.protein || 0, fat: +newFood.fat || 0, carbs: +newFood.carbs || 0 }]; setCustomFoods(f); storage.set('customFoods', f); setNewFood({ name: '', cal: '', protein: '', fat: '', carbs: '' }); setShowAddFood(false); };
+      
+      const addCustomFood = () => {
+        if (!newFood.name || !newFood.cal) return;
+        const f = {
+          name: newFood.name, cal: +newFood.cal || 0,
+          protein: +newFood.protein || 0, fat: +newFood.fat || 0, carbs: +newFood.carbs || 0,
+          animP: +newFood.animP || 0, plantP: +newFood.plantP || 0,
+          satFat: +newFood.satFat || 0, wordsunFat: +newFood.wordsunFat || 0,
+          slowCarbs: +newFood.slowCarbs || 0, fastCarbs: +newFood.fastCarbs || 0
+        };
+        const upd = [...customFoods, f];
+        setCustomFoods(upd); storage.set('customFoods', upd);
+        setNewFood({ name: '', cal: '', protein: '', fat: '', carbs: '', animP: '', plantP: '', satFat: '', wordsunFat: '', slowCarbs: '', fastCarbs: '' });
+        setShowAddFood(false);
+      };
 
       const totalCal = meals.reduce((s, m) => s + m.calories, 0);
       const totalP = meals.reduce((s, m) => s + m.protein, 0);
       const totalF = meals.reduce((s, m) => s + m.fat, 0);
       const totalC = meals.reduce((s, m) => s + m.carbs, 0);
+      const totalAnimP = meals.reduce((s, m) => s + (m.animP || 0), 0);
+      const totalPlantP = meals.reduce((s, m) => s + (m.plantP || 0), 0);
+      const totalSatFat = meals.reduce((s, m) => s + (m.satFat || 0), 0);
+      const totalUnsatFat = meals.reduce((s, m) => s + (m.wordsunFat || 0), 0);
+      const totalSlowCarbs = meals.reduce((s, m) => s + (m.slowCarbs || 0), 0);
+      const totalFastCarbs = meals.reduce((s, m) => s + (m.fastCarbs || 0), 0);
 
       return (
         <div className="min-h-screen bg-black text-white pb-20">
+          {alerts.map((a, i) => <Alert key={i} {...a} onClose={() => setAlerts(alerts.filter((_, j) => j !== i))} />)}
+          
           <div className="max-w-md mx-auto p-4">
             <div className="flex items-center justify-between mb-4">
               <button onClick={() => changeDate(-1)} className="p-2 text-2xl">‹</button>
@@ -170,8 +239,8 @@
             </div>
 
             {showSettings && (
-              <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-                <div className="bg-gray-900 rounded-2xl p-5 w-full max-w-sm border border-gray-700">
+              <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4">
+                <div className="bg-gray-900 rounded-2xl p-5 w-full max-w-sm border border-gray-700 max-h-[90vh] overflow-y-auto">
                   <div className="flex justify-between mb-4"><h3 className="font-bold">Налаштування цілей</h3><button onClick={() => setShowSettings(false)}>✕</button></div>
                   <div className="space-y-3">
                     <div><label className="text-sm text-gray-400">Калорії</label><input type="number" value={tempGoals.calories} onChange={(e) => setTempGoals({ ...tempGoals, calories: +e.target.value })} className="w-full bg-gray-800 rounded-xl px-4 py-2 mt-1" /></div>
@@ -185,16 +254,26 @@
             )}
 
             {showAddFood && (
-              <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-                <div className="bg-gray-900 rounded-2xl p-5 w-full max-w-sm border border-gray-700">
-                  <div className="flex justify-between mb-4"><h3 className="font-bold">Новий продукт</h3><button onClick={() => setShowAddFood(false)}>✕</button></div>
+              <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4">
+                <div className="bg-gray-900 rounded-2xl p-5 w-full max-w-sm border border-gray-700 max-h-[90vh] overflow-y-auto">
+                  <div className="flex justify-between mb-4"><h3 className="font-bold">Новий продукт (на 100г)</h3><button onClick={() => setShowAddFood(false)}>✕</button></div>
                   <div className="space-y-3">
                     <input placeholder="Назва" value={newFood.name} onChange={(e) => setNewFood({...newFood, name: e.target.value})} className="w-full bg-gray-800 rounded-xl px-4 py-2" />
-                    <input type="number" placeholder="Ккал/100г" value={newFood.cal} onChange={(e) => setNewFood({...newFood, cal: e.target.value})} className="w-full bg-gray-800 rounded-xl px-4 py-2" />
-                    <div className="grid grid-cols-3 gap-2">
-                      <input type="number" placeholder="Б" value={newFood.protein} onChange={(e) => setNewFood({...newFood, protein: e.target.value})} className="bg-gray-800 rounded-xl px-3 py-2" />
-                      <input type="number" placeholder="Ж" value={newFood.fat} onChange={(e) => setNewFood({...newFood, fat: e.target.value})} className="bg-gray-800 rounded-xl px-3 py-2" />
-                      <input type="number" placeholder="В" value={newFood.carbs} onChange={(e) => setNewFood({...newFood, carbs: e.target.value})} className="bg-gray-800 rounded-xl px-3 py-2" />
+                    <input type="number" placeholder="Ккал" value={newFood.cal} onChange={(e) => setNewFood({...newFood, cal: e.target.value})} className="w-full bg-gray-800 rounded-xl px-4 py-2" />
+                    <p className="text-xs text-gray-500">Білок:</p>
+                    <div className="grid grid-cols-2 gap-2">
+                      <input type="number" placeholder="Тваринний" value={newFood.animP} onChange={(e) => setNewFood({...newFood, animP: e.target.value, protein: (+e.target.value || 0) + (+newFood.plantP || 0)})} className="bg-gray-800 rounded-xl px-3 py-2 text-sm" />
+                      <input type="number" placeholder="Рослинний" value={newFood.plantP} onChange={(e) => setNewFood({...newFood, plantP: e.target.value, protein: (+newFood.animP || 0) + (+e.target.value || 0)})} className="bg-gray-800 rounded-xl px-3 py-2 text-sm" />
+                    </div>
+                    <p className="text-xs text-gray-500">Жири:</p>
+                    <div className="grid grid-cols-2 gap-2">
+                      <input type="number" placeholder="Насичені" value={newFood.satFat} onChange={(e) => setNewFood({...newFood, satFat: e.target.value, fat: (+e.target.value || 0) + (+newFood.wordsunFat || 0)})} className="bg-gray-800 rounded-xl px-3 py-2 text-sm" />
+                      <input type="number" placeholder="Ненасичені" value={newFood.wordsunFat} onChange={(e) => setNewFood({...newFood, wordsunFat: e.target.value, fat: (+newFood.satFat || 0) + (+e.target.value || 0)})} className="bg-gray-800 rounded-xl px-3 py-2 text-sm" />
+                    </div>
+                    <p className="text-xs text-gray-500">Вуглеводи:</p>
+                    <div className="grid grid-cols-2 gap-2">
+                      <input type="number" placeholder="Повільні" value={newFood.slowCarbs} onChange={(e) => setNewFood({...newFood, slowCarbs: e.target.value, carbs: (+e.target.value || 0) + (+newFood.fastCarbs || 0)})} className="bg-gray-800 rounded-xl px-3 py-2 text-sm" />
+                      <input type="number" placeholder="Швидкі" value={newFood.fastCarbs} onChange={(e) => setNewFood({...newFood, fastCarbs: e.target.value, carbs: (+newFood.slowCarbs || 0) + (+e.target.value || 0)})} className="bg-gray-800 rounded-xl px-3 py-2 text-sm" />
                     </div>
                   </div>
                   <button onClick={addCustomFood} className="w-full bg-emerald-500 py-3 rounded-xl mt-4 font-semibold">Додати</button>
@@ -225,6 +304,21 @@
                       <div className="flex justify-between text-xs"><span style={{color:'#ff2d55'}}>В: {totalC.toFixed(0)}г</span><span className="text-gray-500">/{goals.carbs}г</span></div>
                     </div>
                   </div>
+                  
+                  <button onClick={() => setShowDetails(!showDetails)} className="w-full text-center text-gray-400 text-xs mt-3 py-1">
+                    {showDetails ? '▲ Сховати деталі' : '▼ Детальна розбивка'}
+                  </button>
+                  
+                  {showDetails && (
+                    <div className="mt-3 pt-3 border-t border-gray-800 space-y-2 text-xs">
+                      <div className="flex justify-between"><span style={{color:'#00ffff'}}>Білок тваринний:</span><span>{totalAnimP.toFixed(1)}г</span></div>
+                      <div className="flex justify-between"><span style={{color:'#00ffff'}}>Білок рослинний:</span><span>{totalPlantP.toFixed(1)}г</span></div>
+                      <div className="flex justify-between"><span style={{color:'#adff2f'}}>Жири насичені:</span><span>{totalSatFat.toFixed(1)}г</span></div>
+                      <div className="flex justify-between"><span style={{color:'#adff2f'}}>Жири ненасичені:</span><span>{totalUnsatFat.toFixed(1)}г</span></div>
+                      <div className="flex justify-between"><span style={{color:'#ff2d55'}}>Вуглеводи повільні:</span><span>{totalSlowCarbs.toFixed(1)}г</span></div>
+                      <div className="flex justify-between"><span style={{color:'#ff2d55'}}>Вуглеводи швидкі:</span><span>{totalFastCarbs.toFixed(1)}г</span></div>
+                    </div>
+                  )}
                 </div>
 
                 {!showForm ? (
